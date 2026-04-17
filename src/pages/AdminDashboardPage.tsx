@@ -250,7 +250,7 @@ export default function AdminDashboardPage() {
           is_active: row.is_active,
         });
         await regenerateNow(
-          `تم حفظ دوام ${dayNamesAr[dayOfWeek]} وإعادة توليد المواعيد تلقائيًا`
+          `تم حفظ دوام ${dayNamesAr[row.day_of_week]} وإعادة توليد المواعيد تلقائيًا`
         );
       } catch (error) {
         showError(error);
@@ -405,8 +405,7 @@ export default function AdminDashboardPage() {
             خصص الموقع بالكامل من هنا
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-brand-50 sm:text-lg sm:leading-8">
-            أي تعديل على الدوام أو إعدادات الحجز سيعيد توليد المواعيد القادمة
-            تلقائيًا حتى لا يتكرر الخطأ الذي واجهناه سابقًا.
+            كل سكشن صار لحاله، والدوام الأسبوعي بعرض كامل بدون أي عناصر جنبه.
           </p>
         </div>
 
@@ -422,386 +421,366 @@ export default function AdminDashboardPage() {
           </div>
         ) : null}
 
-        <div className="grid gap-6 xl:grid-cols-2">
-          <form
-            onSubmit={handleSaveClinic}
-            className="admin-card space-y-5 overflow-hidden"
-          >
-            <SectionHeading
-              eyebrow="محتوى العيادة"
-              title="بيانات الصفحة الرئيسية"
-              subtitle="كل النصوص هنا بالعربية، ويمكنك تعديل أزرار الهيرو وروابطها كما تريد."
-            />
+        <form
+          onSubmit={handleSaveClinic}
+          className="admin-card space-y-5 overflow-hidden"
+        >
+          <SectionHeading
+            eyebrow="محتوى العيادة"
+            title="بيانات الصفحة الرئيسية"
+            subtitle="عدل النصوص والروابط والصورة الرئيسية من هنا."
+          />
 
-            <div className="grid gap-5 md:grid-cols-2">
-              <div className="md:col-span-2 min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  اسم العيادة
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.clinic_name || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, clinic_name: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="md:col-span-2 min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  نبذة مختصرة عن العيادة
-                </label>
-                <textarea
-                  className="textarea-base w-full"
-                  value={clinic.about_text || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, about_text: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  رقم الهاتف
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.phone || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, phone: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  رقم الواتساب
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.whatsapp || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, whatsapp: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="md:col-span-2 min-w-0">
-                <label className="mb-2 block text-sm font-bold">العنوان</label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.address || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, address: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="md:col-span-2 min-w-0">
-                <label className="mb-2 flex items-center gap-2 text-sm font-bold">
-                  <MapPinned size={16} />
-                  رابط الخريطة
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.map_url || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, map_url: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="md:col-span-2 min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  رابط الشعار أو الصورة الرئيسية
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.logo_url || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, logo_url: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  شارة الهيرو الصغيرة
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.hero_badge || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, hero_badge: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  عنوان الهيرو الكبير
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.hero_title || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, hero_title: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="md:col-span-2 min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  وصف الهيرو
-                </label>
-                <textarea
-                  className="textarea-base w-full"
-                  value={clinic.hero_subtitle || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, hero_subtitle: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  نص زر الهيرو الأول
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.hero_primary_label || ''}
-                  onChange={(e) =>
-                    setClinic({
-                      ...clinic,
-                      hero_primary_label: e.target.value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 flex items-center gap-2 text-sm font-bold">
-                  <Link2 size={16} />
-                  رابط زر الهيرو الأول
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.hero_primary_url || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, hero_primary_url: e.target.value })
-                  }
-                  placeholder="#booking أو رابط خارجي كامل"
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  نص زر الهيرو الثاني
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.hero_secondary_label || ''}
-                  onChange={(e) =>
-                    setClinic({
-                      ...clinic,
-                      hero_secondary_label: e.target.value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 flex items-center gap-2 text-sm font-bold">
-                  <Link2 size={16} />
-                  رابط زر الهيرو الثاني
-                </label>
-                <input
-                  className="input-base w-full"
-                  value={clinic.hero_secondary_url || ''}
-                  onChange={(e) =>
-                    setClinic({ ...clinic, hero_secondary_url: e.target.value })
-                  }
-                  placeholder="#contact أو رابط خارجي كامل"
-                />
-              </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="md:col-span-2 min-w-0">
+              <label className="mb-2 block text-sm font-bold">اسم العيادة</label>
+              <input
+                className="input-base w-full"
+                value={clinic.clinic_name || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, clinic_name: e.target.value })
+                }
+              />
             </div>
 
+            <div className="md:col-span-2 min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                نبذة مختصرة عن العيادة
+              </label>
+              <textarea
+                className="textarea-base w-full"
+                value={clinic.about_text || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, about_text: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">رقم الهاتف</label>
+              <input
+                className="input-base w-full"
+                value={clinic.phone || ''}
+                onChange={(e) => setClinic({ ...clinic, phone: e.target.value })}
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">رقم الواتساب</label>
+              <input
+                className="input-base w-full"
+                value={clinic.whatsapp || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, whatsapp: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="md:col-span-2 min-w-0">
+              <label className="mb-2 block text-sm font-bold">العنوان</label>
+              <input
+                className="input-base w-full"
+                value={clinic.address || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, address: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="md:col-span-2 min-w-0">
+              <label className="mb-2 flex items-center gap-2 text-sm font-bold">
+                <MapPinned size={16} />
+                رابط الخريطة
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.map_url || ''}
+                onChange={(e) => setClinic({ ...clinic, map_url: e.target.value })}
+              />
+            </div>
+
+            <div className="md:col-span-2 min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                رابط الشعار أو الصورة الرئيسية
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.logo_url || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, logo_url: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                شارة الهيرو الصغيرة
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.hero_badge || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, hero_badge: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                عنوان الهيرو الكبير
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.hero_title || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, hero_title: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="md:col-span-2 min-w-0">
+              <label className="mb-2 block text-sm font-bold">وصف الهيرو</label>
+              <textarea
+                className="textarea-base w-full"
+                value={clinic.hero_subtitle || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, hero_subtitle: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                نص زر الهيرو الأول
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.hero_primary_label || ''}
+                onChange={(e) =>
+                  setClinic({
+                    ...clinic,
+                    hero_primary_label: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 flex items-center gap-2 text-sm font-bold">
+                <Link2 size={16} />
+                رابط زر الهيرو الأول
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.hero_primary_url || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, hero_primary_url: e.target.value })
+                }
+                placeholder="#booking أو رابط خارجي كامل"
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                نص زر الهيرو الثاني
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.hero_secondary_label || ''}
+                onChange={(e) =>
+                  setClinic({
+                    ...clinic,
+                    hero_secondary_label: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 flex items-center gap-2 text-sm font-bold">
+                <Link2 size={16} />
+                رابط زر الهيرو الثاني
+              </label>
+              <input
+                className="input-base w-full"
+                value={clinic.hero_secondary_url || ''}
+                onChange={(e) =>
+                  setClinic({ ...clinic, hero_secondary_url: e.target.value })
+                }
+                placeholder="#contact أو رابط خارجي كامل"
+              />
+            </div>
+          </div>
+
+          <button
+            className="btn-primary w-full"
+            disabled={busyKey === 'save-clinic'}
+          >
+            <Save size={18} />
+            {busyKey === 'save-clinic' ? 'جارٍ الحفظ...' : 'حفظ بيانات العيادة'}
+          </button>
+        </form>
+
+        <form
+          onSubmit={handleSaveSettings}
+          className="admin-card space-y-5 overflow-hidden"
+        >
+          <SectionHeading
+            eyebrow="جدولة المواعيد"
+            title="إعدادات الحجز"
+            subtitle="أي تعديل هنا يعيد توليد المواعيد القادمة تلقائيًا."
+          />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="min-w-0">
+              <label className="mb-2 flex items-center gap-2 text-sm font-bold">
+                <Clock3 size={16} />
+                مدة الموعد
+              </label>
+              <select
+                className="input-base w-full"
+                value={settings.appointment_duration_minutes}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    appointment_duration_minutes: Number(e.target.value),
+                  })
+                }
+              >
+                {[10, 15, 20, 30, 45, 60].map((value) => (
+                  <option key={value} value={value}>
+                    {value} دقيقة
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="min-w-0">
+              <label className="mb-2 block text-sm font-bold">
+                عدد الأيام المتاحة للحجز مقدمًا
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={90}
+                className="input-base w-full"
+                value={settings.booking_days_ahead}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    booking_days_ahead: Number(e.target.value),
+                  })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
             <button
               className="btn-primary w-full"
-              disabled={busyKey === 'save-clinic'}
+              disabled={busyKey === 'save-settings'}
             >
               <Save size={18} />
-              {busyKey === 'save-clinic' ? 'جارٍ الحفظ...' : 'حفظ بيانات العيادة'}
+              {busyKey === 'save-settings'
+                ? 'جارٍ الحفظ...'
+                : 'حفظ إعدادات الحجز'}
             </button>
-          </form>
 
-          <div className="space-y-6 min-w-0">
-            <form
-              onSubmit={handleSaveSettings}
-              className="admin-card space-y-5 overflow-hidden"
+            <button
+              type="button"
+              className="btn-secondary w-full"
+              onClick={handleManualRegenerate}
+              disabled={busyKey === 'manual-regenerate'}
             >
-              <SectionHeading
-                eyebrow="جدولة المواعيد"
-                title="إعدادات الحجز"
-                subtitle="أي تعديل هنا يعيد توليد المواعيد القادمة تلقائيًا."
-              />
-
-              <div className="min-w-0">
-                <label className="mb-2 flex items-center gap-2 text-sm font-bold">
-                  <Clock3 size={16} />
-                  مدة الموعد
-                </label>
-                <select
-                  className="input-base w-full"
-                  value={settings.appointment_duration_minutes}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      appointment_duration_minutes: Number(e.target.value),
-                    })
-                  }
-                >
-                  {[10, 15, 20, 30, 45, 60].map((value) => (
-                    <option key={value} value={value}>
-                      {value} دقيقة
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="min-w-0">
-                <label className="mb-2 block text-sm font-bold">
-                  عدد الأيام المتاحة للحجز مقدمًا
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={90}
-                  className="input-base w-full"
-                  value={settings.booking_days_ahead}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      booking_days_ahead: Number(e.target.value),
-                    })
-                  }
-                />
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <button
-                  className="btn-primary w-full"
-                  disabled={busyKey === 'save-settings'}
-                >
-                  <Save size={18} />
-                  {busyKey === 'save-settings'
-                    ? 'جارٍ الحفظ...'
-                    : 'حفظ إعدادات الحجز'}
-                </button>
-
-                <button
-                  type="button"
-                  className="btn-secondary w-full"
-                  onClick={handleManualRegenerate}
-                  disabled={busyKey === 'manual-regenerate'}
-                >
-                  <CalendarSync size={18} />
-                  {busyKey === 'manual-regenerate'
-                    ? 'جارٍ التوليد...'
-                    : 'إعادة توليد المواعيد'}
-                </button>
-              </div>
-            </form>
-
-            <section className="admin-card overflow-hidden">
-              <SectionHeading
-                eyebrow="أيام الدوام"
-                title="الدوام الأسبوعي"
-                subtitle="بعد حفظ أي يوم سيتم تحديث المواعيد القادمة تلقائيًا."
-              />
-
-              <div className="space-y-4">
-                {workingHours.map((row) => (
-                  <div
-                    key={row.id}
-                    className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 sm:p-5 overflow-hidden"
-                  >
-                    <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-[160px_minmax(0,180px)_minmax(0,1fr)_minmax(0,1fr)_130px]">
-                      <div className="flex items-center justify-between gap-3 lg:justify-start">
-                        <div className="text-lg font-black text-slate-900">
-                          {dayNamesAr[row.day_of_week]}
-                        </div>
-                      </div>
-
-                      <label className="flex min-w-0 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 font-bold text-slate-700">
-                        <input
-                          type="checkbox"
-                          checked={row.is_active}
-                          onChange={(e) =>
-                            setWorkingHours((prev) =>
-                              prev.map((item) =>
-                                item.id === row.id
-                                  ? { ...item, is_active: e.target.checked }
-                                  : item
-                              )
-                            )
-                          }
-                        />
-                        <span>فعال</span>
-                      </label>
-
-                      <div className="min-w-0">
-                        <input
-                          type="time"
-                          className="input-base w-full"
-                          value={row.start_time}
-                          onChange={(e) =>
-                            setWorkingHours((prev) =>
-                              prev.map((item) =>
-                                item.id === row.id
-                                  ? { ...item, start_time: e.target.value }
-                                  : item
-                              )
-                            )
-                          }
-                        />
-                      </div>
-
-                      <div className="min-w-0">
-                        <input
-                          type="time"
-                          className="input-base w-full"
-                          value={row.end_time}
-                          onChange={(e) =>
-                            setWorkingHours((prev) =>
-                              prev.map((item) =>
-                                item.id === row.id
-                                  ? { ...item, end_time: e.target.value }
-                                  : item
-                              )
-                            )
-                          }
-                        />
-                      </div>
-
-                      <button
-                        type="button"
-                        className="btn-primary w-full"
-                        onClick={() => handleSaveWorkingHour(row.day_of_week)}
-                        disabled={busyKey === `save-hour-${row.day_of_week}`}
-                      >
-                        <Save size={18} />
-                        {busyKey === `save-hour-${row.day_of_week}`
-                          ? 'جارٍ الحفظ...'
-                          : 'حفظ'}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
+              <CalendarSync size={18} />
+              {busyKey === 'manual-regenerate'
+                ? 'جارٍ التوليد...'
+                : 'إعادة توليد المواعيد'}
+            </button>
           </div>
-        </div>
+        </form>
+
+        <section className="admin-card overflow-hidden">
+          <SectionHeading
+            eyebrow="أيام الدوام"
+            title="الدوام الأسبوعي"
+            subtitle="هذا السكشن صار كامل لحاله، بدون أي شيء بجانبه."
+          />
+
+          <div className="space-y-4">
+            {workingHours.map((row) => (
+              <div
+                key={row.id}
+                className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 sm:p-5"
+              >
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-[180px_180px_1fr_1fr_150px] xl:items-center">
+                  <div className="text-lg font-black text-slate-900">
+                    {dayNamesAr[row.day_of_week]}
+                  </div>
+
+                  <label className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 font-bold text-slate-700">
+                    <input
+                      type="checkbox"
+                      checked={row.is_active}
+                      onChange={(e) =>
+                        setWorkingHours((prev) =>
+                          prev.map((item) =>
+                            item.id === row.id
+                              ? { ...item, is_active: e.target.checked }
+                              : item
+                          )
+                        )
+                      }
+                    />
+                    <span>فعال</span>
+                  </label>
+
+                  <input
+                    type="time"
+                    className="input-base w-full"
+                    value={row.start_time}
+                    onChange={(e) =>
+                      setWorkingHours((prev) =>
+                        prev.map((item) =>
+                          item.id === row.id
+                            ? { ...item, start_time: e.target.value }
+                            : item
+                        )
+                      )
+                    }
+                  />
+
+                  <input
+                    type="time"
+                    className="input-base w-full"
+                    value={row.end_time}
+                    onChange={(e) =>
+                      setWorkingHours((prev) =>
+                        prev.map((item) =>
+                          item.id === row.id
+                            ? { ...item, end_time: e.target.value }
+                            : item
+                        )
+                      )
+                    }
+                  />
+
+                  <button
+                    type="button"
+                    className="btn-primary w-full"
+                    onClick={() => handleSaveWorkingHour(row.day_of_week)}
+                    disabled={busyKey === `save-hour-${row.day_of_week}`}
+                  >
+                    <Save size={18} />
+                    {busyKey === `save-hour-${row.day_of_week}`
+                      ? 'جارٍ الحفظ...'
+                      : 'حفظ'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="admin-card overflow-hidden">
           <SectionHeading
